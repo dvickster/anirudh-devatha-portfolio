@@ -1,27 +1,274 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anirudh Devatha</title>
-    <style>
-        body {
-            font-family: sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f2f5;
-        }
-        h1 {
-            color: #333;
-            text-align: center;
-            padding: 20px;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bloom | Anirudh Devatha</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Cinzel:wght@400;500&display=swap"
+    rel="stylesheet" />
+
+  <style>
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --cream: #fdf6ee;
+      --blush: #e8c4b8;
+      --rose: #c97d6e;
+      --deep: #3a1f1a;
+      --gold: #c9a96e;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: var(--deep);
+    }
+
+    /* ── 3D Flower Background ── */
+    #sketchfab-bg {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      border: none;
+      z-index: 0;
+    }
+
+    /* Soft vignette overlay so header pops */
+    .vignette {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background: radial-gradient(ellipse at center,
+          transparent 40%,
+          rgba(30, 10, 8, 0.55) 100%);
+    }
+
+    /* Top gradient so header text is always legible */
+    .top-fade {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 160px;
+      z-index: 2;
+      pointer-events: none;
+      background: linear-gradient(to bottom,
+          rgba(30, 10, 8, 0.6) 0%,
+          transparent 100%);
+    }
+
+    /* ── Header ── */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 36px 48px;
+    }
+
+    .logo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      animation: fadeDown 1.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    .logo-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 400;
+      letter-spacing: 0.35em;
+      color: var(--cream);
+      text-transform: uppercase;
+      text-shadow: 0 2px 24px rgba(201, 125, 110, 0.4);
+    }
+
+    .logo-rule {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .logo-rule::before,
+    .logo-rule::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold), transparent);
+      opacity: 0.7;
+    }
+
+    .logo-sub {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      letter-spacing: 0.25em;
+      color: var(--blush);
+      opacity: 0.9;
+      white-space: nowrap;
+    }
+
+    /* ── Animations ── */
+    @keyframes fadeDown {
+      from {
+        opacity: 0;
+        transform: translateY(-18px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    :root {
+      --cream: #fdf6ee;
+      --blush: #e8c4b8;
+      --rose: #c97d6e;
+      --deep: #3a1f1a;
+      --gold: #c9a96e;
+    }
+
+    #loader {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: var(--deep);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
+      transition: opacity 1s ease;
+    }
+
+    #loader.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .loader-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.2rem, 3vw, 2rem);
+      font-weight: 400;
+      letter-spacing: 0.4em;
+      color: var(--cream);
+      text-transform: uppercase;
+      opacity: 0.85;
+    }
+
+    .loader-bar-wrap {
+      width: clamp(160px, 30vw, 260px);
+      height: 1px;
+      background: rgba(255, 255, 255, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .loader-bar {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(to right, var(--rose), var(--gold));
+      transition: width 0.3s ease;
+    }
+
+    .loader-pct {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 0.85rem;
+      letter-spacing: 0.2em;
+      color: var(--blush);
+      opacity: 0.7;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 480px) {
+      header {
+        padding: 24px 24px;
+      }
+    }
+  </style>
 </head>
+
 <body>
-    <h1>Anirudh Devatha</h1>
+
+  <!-- 3D Flower Embed -->
+  <iframe id="sketchfab-bg" title="Rhododendron Azalea"
+    src="https://sketchfab.com/models/d4cbd63bd7a64bc6af3fb06079468dff/embed?autostart=1&ui_stop=0&ui_infos=0&ui_controls=0&ui_watermark=0&ui_watermark_link=0&ui_ar=0&ui_help=0&ui_settings=0&ui_vr=0&ui_fullscreen=0&ui_annotations=0&transparent=0&dnt=1"
+    allow="autoplay; fullscreen; xr-spatial-tracking" allowfullscreen mozallowfullscreen="true"
+    webkitallowfullscreen="true"></iframe>
+
+  <div id="loader">
+    <span class="loader-title">Bloom</span>
+    <div class="loader-bar-wrap">
+      <div class="loader-bar" id="loader-bar"></div>
+    </div>
+    <span class="loader-pct" id="loader-pct">0%</span>
+  </div>
+
+  <!-- Invisible overlay to capture interactions and prevent accidental clicks on the 3D model -->
+  <div style="position:fixed; inset:0; z-index:1;"></div>
+
+  <!-- Overlays -->
+  <div class="vignette"></div>
+  <div class="top-fade"></div>
+
+  <!-- Header -->
+  <header>
+    <div class="logo">
+      <span class="logo-title">Bloom</span>
+      <div class="logo-rule">
+        <span class="logo-sub">Anirudh Devatha</span>
+      </div>
+    </div>
+  </header>
+
+  <script>
+    const barEl = document.getElementById('loader-bar');
+    const pctEl = document.getElementById('loader-pct');
+    const loaderEl = document.getElementById('loader');
+
+    let pct = 0;
+    const interval = setInterval(() => {
+      pct += Math.random() * 12;
+      if (pct >= 100) {
+        pct = 100;
+        clearInterval(interval);
+        barEl.style.width = '100%';
+        pctEl.textContent = '100%';
+        setTimeout(() => {
+          loaderEl.classList.add('hidden');
+          setTimeout(() => loaderEl.style.display = 'none', 1000);
+        }, 400);
+      } else {
+        barEl.style.width = pct + '%';
+        pctEl.textContent = Math.floor(pct) + '%';
+      }
+    }, 200);
+  </script>
+
 </body>
 </html>
