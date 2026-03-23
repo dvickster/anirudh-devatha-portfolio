@@ -129,6 +129,16 @@
     }
 
     /* ── Animations ── */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
     @keyframes fadeDown {
       from {
         opacity: 0;
@@ -204,6 +214,51 @@
       opacity: 0.7;
     }
 
+    #enter-btn {
+      opacity: 0;
+      visibility: hidden;
+      font-family: 'Cinzel', serif;
+      font-size: clamp(0.75rem, 1.5vw, 0.9rem);
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--cream);
+      background: transparent;
+      border: 1px solid rgba(201, 169, 110, 0.5);
+      padding: clamp(10px, 2vw, 14px) clamp(28px, 5vw, 48px);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: color 0.4s ease, border-color 0.4s ease;
+    }
+
+    #enter-btn.visible {
+      visibility: visible;
+      animation: fadeIn 1.2s ease forwards;
+    }
+
+    #enter-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, var(--rose), var(--gold));
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    #enter-btn:hover::before {
+      opacity: 0.15;
+    }
+
+    #enter-btn:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    #enter-btn span {
+      position: relative;
+      z-index: 1;
+    }
+
     /* ── Responsive ── */
     @media (max-width: 480px) {
       header {
@@ -227,16 +282,34 @@
       <div class="loader-bar" id="loader-bar"></div>
     </div>
     <span class="loader-pct" id="loader-pct">0%</span>
+    <button id="enter-btn" onclick="handleEnter()">
+      <span>Enter</span>
+    </button>
   </div>
+
+  <audio id="bg-audio" loop>
+    <source src="serenebg.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    const audio = document.getElementById('bg-audio');
+
+    function startAudio() {
+      audio.play().catch(() => { });
+      document.removeEventListener('click', startAudio);
+      document.removeEventListener('keydown', startAudio);
+    }
+
+    document.addEventListener('click', startAudio);
+    document.addEventListener('keydown', startAudio);
+  </script>
 
   <!-- Invisible overlay to capture interactions and prevent accidental clicks on the 3D model -->
   <div style="position:fixed; inset:0; z-index:1;"></div>
 
-  <!-- Overlays -->
   <div class="vignette"></div>
   <div class="top-fade"></div>
 
-  <!-- Header -->
   <header>
     <div class="logo">
       <span class="logo-title">Bloom</span>
@@ -260,15 +333,21 @@
         barEl.style.width = '100%';
         pctEl.textContent = '100%';
         setTimeout(() => {
-          loaderEl.classList.add('hidden');
-          setTimeout(() => loaderEl.style.display = 'none', 1000);
+          document.getElementById('enter-btn').classList.add('visible');
         }, 400);
       } else {
         barEl.style.width = pct + '%';
         pctEl.textContent = Math.floor(pct) + '%';
       }
     }, 200);
+
+    function handleEnter() {
+      loaderEl.classList.add('hidden');
+      setTimeout(() => loaderEl.style.display = 'none', 1000);
+      startAudio();
+    }
   </script>
 
 </body>
+
 </html>
